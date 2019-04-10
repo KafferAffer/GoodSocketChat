@@ -152,7 +152,8 @@
             socket.emit('getMessage', Cchatid);
             
             
-            socket.on(Cchatid, function(msg){
+            socket.on(Cchatid, function(msg,navn){
+                $('#messages').append(navn+": ");
                 $('#messages').append($('<li>').text(msg));
             });
             

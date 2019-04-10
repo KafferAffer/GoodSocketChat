@@ -1,5 +1,4 @@
 var mysql = require('mysql');
-var promise = require('promise');
 //defines the connection to localhost
 var con = mysql.createConnection({
   host: "localhost",
