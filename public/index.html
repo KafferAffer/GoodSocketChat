@@ -95,7 +95,20 @@
         }
         
         function addchatbutton(chatnavn,chatid){
+            $selectchatbutton = document.createElement("button");
+            $selectchatbutton.id = chatid;
+            $selectchatbutton.value = chatid;
+            $selectchatbutton.append(""+chatnavn+"");
+            $selectchatbutton.style = "width: 100px; height: 20px;";
             
+            $('#main').append("<br>");
+            $('#main').append($selectchatbutton);
+            
+            
+            $('#'+chatid).click(function(e){
+                console.log("you pressed "+$('#'+chatid).val());
+                
+            });
         }
         
         socket.on('login', function(msg,ID,name){
@@ -103,14 +116,16 @@
                 userID = ID;
                 clear();
                 usersite(name);
-                socket.emit('chatquery', userID);
+                socket.emit('chatQuery', userID);
             }
         });
         socket.on('errormsg', function(msg){
             alert(msg);
         });
         socket.on("ch",function(ChatNavn,ChatId){
-            
+            console.log(ChatNavn);
+            console.log(ChatId);
+            addchatbutton(ChatNavn,ChatId);
         });
     </script>
   </body>

@@ -89,17 +89,22 @@ function newConnection(socket){
     
     //chatrequest
     socket.on('chatQuery',function(userID){
+        console.log(userID+"recieved");
         var sql = "SELECT chat_id FROM ChromeChat.MEMBER WHERE user_id='"+userID+"'";
         con.query(sql, function (err, result) {
-            if (err) reject(err);
+            if (err) throw(err);
             if(result.length>0){
                 for(var i=0;i<result.length;i++){
-                    var Id = result[i];
-                    var sql = "SELECT navn FROM ChromeChat.CHATS WHERE id='"+Id+"'";
+                    var Id = result[i].chat_id;
+                    var sql = "SELECT * FROM ChromeChat.CHAT WHERE id='"+Id+"'";
                     con.query(sql, function (err, result) {
-                        if (err) reject(err);
-                        var Navn = result;
-                        socket.emit('ch',Navn,Id);
+                        if (err) throw(err);
+                        var Navn = result[0].navn;
+                        console.log(Navn);
+                        var cId = result[0].id;
+                        console.log(cId);
+                        console.log("chat emitted");
+                        socket.emit('ch',Navn,cId);
                     });
                 }
             }
