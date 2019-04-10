@@ -52,7 +52,27 @@ function newConnection(socket){
         });
         
     });
-    
+    //chatrequest
+    socket.on('chatQuery',function(userID){
+        var sql = "SELECT MEMBER.chat_id FROM ChromeChat.MEMBER WHERE user_id='"+userID+"'";
+        con.query(sql, function (err, result) {
+            if (err) reject(err);
+            if(result.length>0){
+                for(var i=0;i<result.length;i++){
+                    var Id = result[i];
+                    var sql = "SELECT CHATS.navn FROM ChromeChat.CHATS WHERE id='"+Id+"'";
+                    con.query(sql, function (err, result) {
+                        if (err) reject(err);
+                        var Navn = result;
+                        socket.emit('ch',Navn,Id);
+                    });
+                }
+            }
+            else{
+                //socket.emit('errormsg',"");
+            }
+        });
+    });
     console.log(socket.id);
 }
 
