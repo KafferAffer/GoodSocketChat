@@ -10,6 +10,7 @@
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script>
         var userID;
+        var socket = io();
         loginandsetup();
         function loginandsetup(){            
             $loginnameinput = document.createElement("input");
@@ -31,6 +32,38 @@
             $('#main').append($loginnameinput);
             $('#main').append($loginpassinput);
             $('#main').append($loginbutton);
+            
+            $('#loginsubmit').click(function(e){
+                e.preventDefault(); // prevents page reloading
+                socket.emit('login', $('#loginusername').val(),$('#loginpassword').val());
+                return false;
+            });
+            
+            $signupnameinput = document.createElement("input");
+            $signupnameinput.style = "width: 100px; height: 20px;";
+            $signupnameinput.id = "signupusername";
+            $signupnameinput.placeholder = "username";
+            
+            $signuppassinput = document.createElement("input");
+            $signuppassinput.style = "width: 100px; height: 20px;";
+            $signuppassinput.id = "signuppassword";
+            $signuppassinput.placeholder = "password";
+            
+            $signupbutton = document.createElement("button");
+            $signupbutton.style = "width: 100px; height: 20px;";
+            $signupbutton.id = "signupsubmit";
+            $signupbutton.append("login");
+            
+            $('#main').append("<br>"+"signup"+"<br>");
+            $('#main').append($signupnameinput);
+            $('#main').append($signuppassinput);
+            $('#main').append($signupbutton);
+            
+            $('#signupsubmit').click(function(e){
+                e.preventDefault(); // prevents page reloading
+                socket.emit('signup', $('#signupusername').val(),$('#signuppassword').val());
+                return false;
+            });
         }
         
         function clear(){
@@ -52,41 +85,33 @@
             $('#main').append("CreateChat"+"<br>");
             $('#main').append($chatnameinput);
             $('#main').append($chatbutton);
-        }
-        
-        //$(function () {
-            var socket = io();
-            
-            $('#loginsubmit').click(function(e){
-                e.preventDefault(); // prevents page reloading
-                socket.emit('login', $('#loginusername').val(),$('#loginpassword').val());
-                return false;
-            });
             
             $('#chatsubmit').click(function(e){
                 console.log("button pressed");
                 e.preventDefault(); // prevents page reloading
-                //socket.emit('createchat', $('#chatname').val(),userID);
-                var data = {
-                    x: 'hi',
-                    y: 'there'
-                }
-                socket.emit('createchat', data);
+                socket.emit('createchat', $('#chatname').val(),userID);
                 return false;
             });
+        }
+        
+        function addchatbutton(chatnavn,chatid){
             
-            socket.on('login', function(msg,ID,name){
-                if(msg){
-                    userID = ID;
-                    clear();
-                    usersite(name);
-                    socket.emit('chatquery', userID);
-                }
-            });
-            socket.on('errormsg', function(msg){
-                alert(msg);
-            });
-        //});
+        }
+        
+        socket.on('login', function(msg,ID,name){
+            if(msg){
+                userID = ID;
+                clear();
+                usersite(name);
+                socket.emit('chatquery', userID);
+            }
+        });
+        socket.on('errormsg', function(msg){
+            alert(msg);
+        });
+        socket.on("ch",function(ChatNavn,ChatId){
+            
+        });
     </script>
   </body>
 </html>
