@@ -36,7 +36,14 @@ if (err) throw err;
     if (err) throw err;
         console.log("User table created");
     });
+
+    sql ="ALTER TABLE ChromeChat.USER CONVERT TO CHARACTER SET utf8";
     
+    con.query(sql, function (err, result) {
+    if (err) throw err;
+        console.log("User table fixed");
+    });
+
     //Creates Chat tables
     var sql = 'CREATE TABLE IF NOT EXISTS ChromeChat.CHAT (\
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,\
@@ -50,6 +57,13 @@ if (err) throw err;
         console.log("Chat table created");
     });
     
+    sql ="ALTER TABLE ChromeChat.CHAT CONVERT TO CHARACTER SET utf8";
+    
+    con.query(sql, function (err, result) {
+    if (err) throw err;
+        console.log("chat table fixed");
+    });
+
     //Creates Member tables
     var sql = "CREATE TABLE IF NOT EXISTS ChromeChat.MEMBER (\
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,\
@@ -64,6 +78,13 @@ if (err) throw err;
         console.log("Member table created");
     });
     
+    sql ="ALTER TABLE ChromeChat.MEMBER CONVERT TO CHARACTER SET utf8";
+    
+    con.query(sql, function (err, result) {
+    if (err) throw err;
+        console.log("Member table fixed");
+    });
+
      //Creates Message tables
     var sql = "CREATE TABLE IF NOT EXISTS  ChromeChat.MESSAGE (\
         id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,\
@@ -79,3 +100,9 @@ if (err) throw err;
         console.log("Message table created");
     });
     
+    sql ="ALTER TABLE ChromeChat.MESSAGE CONVERT TO CHARACTER SET utf8";
+    
+    con.query(sql, function (err, result) {
+    if (err) throw err;
+        console.log("Message table fixed");
+    });

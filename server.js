@@ -32,7 +32,7 @@ function newConnection(socket){
         console.log('password: ' + password);
         var sql = "SELECT * FROM ChromeChat.USER WHERE navn = '"+ username +"' AND password = '"+password+"'";
         con.query(sql, function (err, result) {
-            if (err) reject(err);
+            if (err) throw(err);
             if(result.length>0){
                 console.log("welcome " + result[0].navn);
                 socket.emit('login',true,result[0].id,result[0].navn);
@@ -47,7 +47,7 @@ function newConnection(socket){
         
         var sql = "SELECT * FROM ChromeChat.USER WHERE navn = '"+ username +"' AND password = '"+password+"'";
         con.query(sql, function (err, result) {
-            if (err) reject(err);
+            if (err) throw(err);
             if(result.length>0){
                 socket.emit('errormsg',"user already exists");
             }else{
