@@ -109,6 +109,14 @@ function newConnection(socket){
         });
     });
     
+    socket.on('sendMessage',function(chatid,userid,message){
+        var sql = "INSERT INTO ChromeChat.MESSAGE(user_id,chat_id,message) VALUES ('"+chatid+"','"+userid+"','"+message+"')";
+        con.query(sql, function (err, result) {
+            if (err) throw(err);
+            socket.emit('sentMessage',true);
+        });
+    });
+    
     socket.on('getMessage',function(chatid){
         
         
