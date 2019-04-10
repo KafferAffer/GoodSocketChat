@@ -178,15 +178,15 @@ function newConnection(socket){
             if(result.length>0){
             var i = result.length-1;
             lnast(i,result,chatid);
-                function lnast(i,result1,chatid){
-                    if(i>=0){
-                        var sql = "SELECT * FROM ChromeChat.USER WHERE id = '"+ result1[i].user_id +"'";
-                        con.query(sql, function (err, result2) {
-                                io.emit(chatid,result1[i].message,result2[0].navn);
-                                lnast(i-1,result1,chatid);
-                        });
-                    }
+            function lnast(i,result1,chatid){
+                if(i>=0){
+                    var sql = "SELECT * FROM ChromeChat.USER WHERE id = '"+ result1[i].user_id +"'";
+                    con.query(sql, function (err, result2) {
+                            io.emit(chatid,result1[i].message,result2[0].navn);
+                            lnast(i-1,result1,chatid);
+                    });
                 }
+            }
             }else{
                 console.log("zero messages");
             }
