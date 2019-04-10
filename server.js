@@ -113,6 +113,23 @@ function newConnection(socket){
             }
         });
     });
+    
+    socket.on('getMessage',function(chatid){
+        
+        
+        var sql = "SELECT * FROM ChromeChat.MESSAGE WHERE chat_id='"+chatid+"' ORDER BY id DESC LIMIT 5";
+        con.query(sql, function (err, result) {
+            if (err) throw(err);
+            if(result.length>0){
+                for(var i=0;i<result.length;i++){
+                    var Message = result[i];
+                    socket.emit('gotMessage',Message);
+                    }
+            }else{
+                console.log("zero messages");
+            }
+        });
+    });
     console.log(socket.id);
 }
 
