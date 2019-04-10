@@ -91,39 +91,23 @@ socket.on('login',function(username,password){
 
 
 socket.on('chatQuery',function(userID){
-        var sql = "SELECT MEMBER.chat_id FROM ChromeChat.MEMBER WHERE user_id='".$UserId."'";
-        con.query(sql, function (err, result) {
-            if (err) reject(err);
-            if(result.length>0){
-                for(i=0;i<=result.length;i++){
-                    var memberid
-                    function()
+    var sql = "SELECT MEMBER.chat_id FROM ChromeChat.MEMBER WHERE user_id='"+UserId+"'";
+    con.query(sql, function (err, result) {
+        if (err) reject(err);
+        if(result.length>0){
+            for(i=0;i<result.length;i++){
+                var Id = result[i];
+                var sql = "SELECT CHATS.navn FROM ChromeChat.CHATS WHERE id='"+tempId+"'";
+                con.query(sql, function (err, result) {
+                    if (err) reject(err);
+                    var Navn = result;
                 }
-                socket.emit('login',true);
-            }else{
-                socket.emit('errormsg',"user and password doesnt exist");
+                socket.emit('ch',Navn,Id);
             }
-        });
-    });
-
-/*
-    function getMemberId($UserId){
-    $sql = "SELECT MEMBER.id FROM ChromeChat.MEMBER WHERE user_id='".$UserId."'";
-    $result = connect()->query($sql);
-    $MemberId = array();
-    
-    $i = 0;
-    if ($result->num_rows > 0) {
-        // output data of each row
-        while($row = $result->fetch_assoc()) {
-            $MemberId[$i] = $row['id'];
-            $i++;
         }
-    }
-    return $MemberId;
-}
-*/
-    //get all tables 
-    var sql = "SELECT ChromeChat.CHATS WHERE "
+        else{
+            //socket.emit('errormsg',"");
+        }
+    })
+});
 
-    
