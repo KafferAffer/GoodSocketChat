@@ -87,6 +87,24 @@ function newConnection(socket){
         
     });
     
+    //adding members
+    socket.on('addmember',function(membername,chatid){
+        var sql = "SELECT * FROM ChromeChat.USER WHERE navn = '"+membername+"'";
+        con.query(sql, function (err, result1) {
+           if(result1.length>0){
+               SMID=result1[0].id;
+               console.log(SMID+" "+chatid);
+               var sql1 = "INSERT INTO ChromeChat.MEMBER(user_id, chat_id) VALUES ('"+SMID+"','"+chatid+"')";
+               con.query(sql1, function (err, result2) {
+                   socket.emit('errormsg',membername+" has been added");
+               });
+           }else{
+               socket.emit('errormsg',membername+" could not be found");
+           }
+        });
+        
+    });
+    
     //chatrequest
     socket.on('chatQuery',function(userID){
         console.log(userID+"recieved");

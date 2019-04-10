@@ -12,6 +12,8 @@
         var userID;
         var socket = io();
         loginandsetup();
+        
+        //login og setup siden
         function loginandsetup(){            
             $loginnameinput = document.createElement("input");
             $loginnameinput.style = "width: 100px; height: 20px;";
@@ -66,15 +68,17 @@
             });
         }
         
+        //ryder skærmen
         function clear(){
             $("#main").empty();
         }
         
+        //siden med lav chat og vælg chat
         function usersite(name){
             $chatnameinput = document.createElement("input");
             $chatnameinput.style = "width: 100px; height: 20px;";
             $chatnameinput.id = "chatname";
-            $chatnameinput.placeholder = "username";
+            $chatnameinput.placeholder = "chatname";
             
             $chatbutton = document.createElement("button");
             $chatbutton.style = "width: 100px; height: 20px;";
@@ -94,6 +98,38 @@
             });
         }
         
+        function chatsite(chatid){
+            console.log(chatid);
+            var Cchatid = chatid;
+            
+            $membernameinput = document.createElement("input");
+            $membernameinput.style = "width: 100px; height: 20px;";
+            $membernameinput.id = "membername";
+            $membernameinput.placeholder = "username";
+            
+            $memberbutton = document.createElement("button");
+            $memberbutton.style = "width: 100px; height: 20px;";
+            $memberbutton.id = "membersubmit";
+            $memberbutton.append("add member");
+            
+            $('#main').append("Add member"+"<br>");
+            $('#main').append($membernameinput);
+            $('#main').append($memberbutton);
+            
+            $chatlist = document.createElement("ul");
+            $chatlist.id = "messages";
+            $('#main').append("messages: "+"<br>");
+            $('#main').append($chatlist);
+            
+            
+            
+            $('#membersubmit').click(function(e){
+                e.preventDefault(); // prevents page reloading
+                socket.emit('addmember', $('#membername').val(),Cchatid);
+                return false;
+            });
+        }
+        
         function addchatbutton(chatnavn,chatid){
             $selectchatbutton = document.createElement("button");
             $selectchatbutton.id = chatid;
@@ -107,6 +143,10 @@
             
             $('#'+chatid).click(function(e){
                 console.log("you pressed "+$('#'+chatid).val());
+                var thisis10 = $('#'+chatid).val();
+                console.log(thisis10);
+                clear();
+                chatsite(thisis10);
                 
             });
         }
