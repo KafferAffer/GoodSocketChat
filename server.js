@@ -25,6 +25,7 @@ var io = socket(server);
 io.sockets.on('connection',newConnection);
 
 function newConnection(socket){
+    
     socket.on('login',function(username,password){
         console.log('navn: ' + username);
         console.log('password: ' + password);
@@ -32,13 +33,24 @@ function newConnection(socket){
         con.query(sql, function (err, result) {
             if (err) reject(err);
             if(result.length>0){
-                console.log("welcome " + username);
-                socket.emit('login',true);
+                console.log("welcome " + result[0].navn);
+                socket.emit('login',true,result[0].id,result[0].navn);
             }else{
                 socket.emit('errormsg',"user and password doesnt exist");
             }
         });
     });
+    
+    socket.on('createchat',function(chatname,userid){
+        console.log(chatname+userid);
+        var sql = "INSERT INTO ChromeChat.CHAT(navn, owner_id) VALUES ('"+chatname+"','"+userid+"')";
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+            console.log("Chat created");
+            socket.emit('errormsg',"chat'"+chatname+"' created");
+        });
+    });
+    
     console.log(socket.id);
 }
 

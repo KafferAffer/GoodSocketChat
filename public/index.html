@@ -9,72 +9,73 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script>
+        var userID;
         var socket = io.connect('http://localhost:3000/');
         loginandsetup();
-        function loginandsetup(){
-            $form = document.createElement("form");
+        function loginandsetup(){            
+            $loginnameinput = document.createElement("input");
+            $loginnameinput.style = "width: 100px; height: 20px;";
+            $loginnameinput.id = "loginusername";
+            $loginnameinput.placeholder = "username";
             
-            $nameinput = document.createElement("input");
-            $nameinput.style = "width: 100px; height: 20px;";
-            $nameinput.id = "loginusername";
-            $nameinput.placeholder = "username";
+            $loginpassinput = document.createElement("input");
+            $loginpassinput.style = "width: 100px; height: 20px;";
+            $loginpassinput.id = "loginpassword";
+            $loginpassinput.placeholder = "password";
             
-            $passinput = document.createElement("input");
-            $passinput.style = "width: 100px; height: 20px;";
-            $passinput.id = "loginpassword";
-            $passinput.placeholder = "password";
+            $loginbutton = document.createElement("button");
+            $loginbutton.style = "width: 100px; height: 20px;";
+            $loginbutton.id = "loginsubmit";
+            $loginbutton.append("login");
             
-            $button = document.createElement("button");
-            $button.style = "width: 100px; height: 20px;";
-            $button.id = "loginsubmit";
-            $button.append("login");
-            
-            $form.append($nameinput);
-            $form.append($passinput);
-            $form.append($button);
-            $('#main').append("login");
-            $('#main').append($form);
+            $('#main').append("login"+"<br>");
+            $('#main').append($loginnameinput);
+            $('#main').append($loginpassinput);
+            $('#main').append($loginbutton);
         }
         
         function clear(){
             $("#main").empty();
         }
         
-        function usersite(){
-            $form = document.createElement("form");
+        function usersite(name){
+            $chatnameinput = document.createElement("input");
+            $chatnameinput.style = "width: 100px; height: 20px;";
+            $chatnameinput.id = "chatname";
+            $chatnameinput.placeholder = "username";
             
-            $nameinput = document.createElement("input");
-            $nameinput.style = "width: 100px; height: 20px;";
-            $nameinput.id = "chatname";
-            $nameinput.placeholder = "chatname";
+            $chatbutton = document.createElement("button");
+            $chatbutton.style = "width: 100px; height: 20px;";
+            $chatbutton.id = "chatsubmit";
+            $chatbutton.append("Create Chat");
             
-            $passinput = document.createElement("input");
-            $passinput.style = "width: 100px; height: 20px;";
-            $passinput.id = "loginpassword";
-            $passinput.placeholder = "password";
-            
-            $button = document.createElement("button");
-            $button.style = "width: 100px; height: 20px;";
-            $button.id = "loginsubmit";
-            $button.append("Create chat");
-            
-            $form.append($nameinput);
-            $form.append($passinput);
-            $form.append($button);
-            $('#main').append("login");
-            $('#main').append($form);
+            $('#main').append("hi: " + name +"<br>");
+            $('#main').append("CreateChat"+"<br>");
+            $('#main').append($chatnameinput);
+            $('#main').append($chatbutton);
         }
         
         $(function () {
             var socket = io();
-            $('form').submit(function(e){
+            
+            $('#loginsubmit').click(function(e){
                 e.preventDefault(); // prevents page reloading
                 socket.emit('login', $('#loginusername').val(),$('#loginpassword').val());
                 return false;
             });
-            socket.on('login', function(msg){
+            
+            $('#chatsubmit').click(function(e){
+                e.preventDefault(); // prevents page reloading
+                socket.emit('createchat', $('#chatname').val(),userID);
+                return false;
+            });
+            
+            socket.on('login', function(msg,ID,name){
                 if(msg){
+                    userID = ID;
                     clear();
+                    usersite(name);
+                    //socket.emit('chatquery', userID);
                 }
             });
             socket.on('errormsg', function(msg){
