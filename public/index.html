@@ -75,7 +75,7 @@
                     userID = ID;
                     clear();
                     usersite(name);
-                    //socket.emit('chatquery', userID);
+                    socket.emit('chatquery', userID);
                 }
             });
             socket.on('errormsg', function(msg){
