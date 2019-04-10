@@ -56,6 +56,11 @@ function newConnection(socket){
                     if (err) throw err;
                     console.log("User created");
                     socket.emit('errormsg',"user' "+username+"' created");
+                    var sql = "SELECT * FROM ChromeChat.USER WHERE navn = '"+ username +"' AND password = '"+password+"'";
+                    con.query(sql, function (err, result2) {
+                        socket.emit('login',true,result2[0].id,result2[0].navn);
+                    });
+                        
                 });
             }
         });
@@ -139,7 +144,12 @@ function newConnection(socket){
         con.query(sql, function (err, result) {
             if (err) throw(err);
         });
-        io.emit(chatid,message);
+        var sql = "SELECT * FROM ChromeChat.USER WHERE id = '"+ userid +"'";
+        con.query(sql, function (err, result) {
+            if (err) throw(err);
+            io.emit(chatid,message,result[0].navn);
+        });
+        
     });
     
     //gets last 5 messages
@@ -148,9 +158,16 @@ function newConnection(socket){
         con.query(sql, function (err, result) {
             if (err) throw(err);
             if(result.length>0){
-                for(var i=result.length-1;i>=0;i--){
-                    var Message = result[i].message;
-                    socket.emit(chatid,Message);
+            var i = result.length-1;
+            lnast(i,result,chatid);
+                function lnast(i,result1,chatid){
+                    if(i>=0){
+                        var sql = "SELECT * FROM ChromeChat.USER WHERE id = '"+ result1[i].user_id +"'";
+                        con.query(sql, function (err, result2) {
+                                io.emit(chatid,result1[i].message,result2[0].navn);
+                                lnast(i-1,result1,chatid);
+                        });
+                    }
                 }
             }else{
                 console.log("zero messages");
