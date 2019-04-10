@@ -42,7 +42,7 @@ function newConnection(socket){
         });
     });
     
-    
+    //signup
     socket.on('signup',function(username,password){
         
         var sql = "SELECT * FROM ChromeChat.USER WHERE navn = '"+ username +"' AND password = '"+password+"'";
@@ -63,7 +63,6 @@ function newConnection(socket){
 
         
     });
-    //signup
     
     //chat create
     socket.on('createchat',function(chatname,userid){
@@ -132,25 +131,26 @@ function newConnection(socket){
         });
     });
     
+    //Server recieves message
     socket.on('sendMessage',function(chatid,userid,message){
-        var sql = "INSERT INTO ChromeChat.MESSAGE(user_id,chat_id,message) VALUES ('"+chatid+"','"+userid+"','"+message+"')";
+        console.log(chatid+" "+userid+" "+message)
+        var sql = "INSERT INTO ChromeChat.MESSAGE(user_id,chat_id,message) VALUES ('"+userid+"','"+chatid+"','"+message+"')";
         con.query(sql, function (err, result) {
             if (err) throw(err);
-            socket.emit('sentMessage',true);
         });
+        io.emit(chatid,message);
     });
     
+    //gets last 5 messages
     socket.on('getMessage',function(chatid){
-        
-        
         var sql = "SELECT * FROM ChromeChat.MESSAGE WHERE chat_id='"+chatid+"' ORDER BY id DESC LIMIT 5";
         con.query(sql, function (err, result) {
             if (err) throw(err);
             if(result.length>0){
-                for(var i=0;i<result.length;i++){
-                    var Message = result[i];
-                    socket.emit('gotMessage',Message);
-                    }
+                for(var i=result.length-1;i>=0;i--){
+                    var Message = result[i].message;
+                    socket.emit(chatid,Message);
+                }
             }else{
                 console.log("zero messages");
             }

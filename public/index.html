@@ -98,8 +98,8 @@
             });
         }
         
+        //her foregår chatten
         function chatsite(chatid){
-            console.log(chatid);
             var Cchatid = chatid;
             
             $membernameinput = document.createElement("input");
@@ -121,6 +121,19 @@
             $('#main').append("messages: "+"<br>");
             $('#main').append($chatlist);
             
+            $beskedinput = document.createElement("input");
+            $beskedinput.style = "width: 100px; height: 20px;";
+            $beskedinput.id = "beskedname";
+            $beskedinput.placeholder = "message";
+            
+            $beskedbutton = document.createElement("button");
+            $beskedbutton.style = "width: 100px; height: 20px;";
+            $beskedbutton.id = "beskedsubmit";
+            $beskedbutton.append("Send message");
+            
+            $('#main').append("Message your friends"+"<br>");
+            $('#main').append($beskedinput);
+            $('#main').append($beskedbutton);
             
             
             $('#membersubmit').click(function(e){
@@ -128,6 +141,21 @@
                 socket.emit('addmember', $('#membername').val(),Cchatid);
                 return false;
             });
+            
+            $('#beskedsubmit').click(function(e){
+                console.log("button pressed");
+                e.preventDefault(); // prevents page reloading
+                socket.emit('sendMessage',Cchatid ,userID, $('#beskedname').val());
+                return false;
+            });
+            
+            socket.emit('getMessage', Cchatid);
+            
+            
+            socket.on(Cchatid, function(msg){
+                $('#messages').append($('<li>').text(msg));
+            });
+            
         }
         
         function addchatbutton(chatnavn,chatid){
