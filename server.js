@@ -78,6 +78,7 @@ function newConnection(socket){
                     var sql = "INSERT INTO ChromeChat.MEMBER(user_id, chat_id) VALUES ('"+userid+"','"+result2[0].id+"')";
                     con.query(sql, function (err, result3) {
                         socket.emit('errormsg',"chat'"+chatname+"' created");
+                        socket.emit('ch',chatname,result2[0].id);
                     });
                 }
 
