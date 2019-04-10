@@ -94,6 +94,7 @@
                 console.log("button pressed");
                 e.preventDefault(); // prevents page reloading
                 socket.emit('createchat', $('#chatname').val(),userID);
+                $('#chatname').val('');
                 return false;
             });
         }
@@ -139,6 +140,7 @@
             $('#membersubmit').click(function(e){
                 e.preventDefault(); // prevents page reloading
                 socket.emit('addmember', $('#membername').val(),Cchatid);
+                $('#membername').val('');
                 return false;
             });
             
@@ -146,6 +148,7 @@
                 console.log("button pressed");
                 e.preventDefault(); // prevents page reloading
                 socket.emit('sendMessage',Cchatid ,userID, $('#beskedname').val());
+                $('#beskedname').val('');
                 return false;
             });
             
@@ -153,11 +156,11 @@
             
             
             socket.on(Cchatid, function(msg,navn){
-                $('#messages').append(navn+": ");
-                $('#messages').append($('<li>').text(msg));
+                $('#messages').append($('<li>').text(navn+": "+msg));
             });
             
         }
+        
         
         function addchatbutton(chatnavn,chatid){
             $selectchatbutton = document.createElement("button");
