@@ -41,14 +41,16 @@ function newConnection(socket){
         });
     });
     
-    socket.on('createchat',function(chatname,userid){
-        console.log(chatname+userid);
+    socket.on('createchat',function(data){
+        console.log(data.x+data.y);
+        
         var sql = "INSERT INTO ChromeChat.CHAT(navn, owner_id) VALUES ('"+chatname+"','"+userid+"')";
         con.query(sql, function (err, result) {
             if (err) throw err;
             console.log("Chat created");
             socket.emit('errormsg',"chat'"+chatname+"' created");
         });
+        
     });
     
     console.log(socket.id);

@@ -10,7 +10,6 @@
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script>
         var userID;
-        var socket = io.connect('http://localhost:3000/');
         loginandsetup();
         function loginandsetup(){            
             $loginnameinput = document.createElement("input");
@@ -55,7 +54,7 @@
             $('#main').append($chatbutton);
         }
         
-        $(function () {
+        //$(function () {
             var socket = io();
             
             $('#loginsubmit').click(function(e){
@@ -65,8 +64,14 @@
             });
             
             $('#chatsubmit').click(function(e){
+                console.log("button pressed");
                 e.preventDefault(); // prevents page reloading
-                socket.emit('createchat', $('#chatname').val(),userID);
+                //socket.emit('createchat', $('#chatname').val(),userID);
+                var data = {
+                    x: 'hi',
+                    y: 'there'
+                }
+                socket.emit('createchat', data);
                 return false;
             });
             
@@ -81,7 +86,7 @@
             socket.on('errormsg', function(msg){
                 alert(msg);
             });
-        });
+        //});
     </script>
   </body>
 </html>
