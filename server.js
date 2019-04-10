@@ -39,6 +39,9 @@ function newConnection(socket){
             }
         });
     });
+    socket.on('chatQuery',function(userID){
+        var sql = "SELECT MEMBER.id FROM ChromeChat.MEMBER WHERE user_id='".$UserId."'";
+    })
     console.log(socket.id);
 }
 
