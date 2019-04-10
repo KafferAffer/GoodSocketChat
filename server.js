@@ -36,8 +36,8 @@ function newConnection(socket){
     
     //login
     socket.on('login',function(username_,password_){
-        var username = escapeHtml(username_);
-        var password = escapeHtml(password_);
+        var username = username_;
+        var password = password_;
         console.log('navn: ' + username);
         console.log('password: ' + password);
         var sql = "SELECT * FROM ChromeChat.USER WHERE navn = '"+ username +"' AND password = '"+password+"'";
@@ -54,8 +54,8 @@ function newConnection(socket){
     
     //signup
     socket.on('signup',function(username_,password_){
-        var username = escapeHtml(username_);
-        var password = escapeHtml(password_);
+        var username = username_;
+        var password = password_;
         var sql = "SELECT * FROM ChromeChat.USER WHERE navn = '"+ username +"' AND password = '"+password+"'";
         con.query(sql, function (err, result) {
             if (err) throw(err);
@@ -82,7 +82,7 @@ function newConnection(socket){
     
     //chat create
     socket.on('createchat',function(chatname_,userid_){
-        var chatname = escapeHtml(chatname_);
+        var chatname = chatname_;
         var userid = userid_;
         var sql = "INSERT INTO ChromeChat.CHAT(navn, owner_id) VALUES ('"+chatname+"','"+userid+"')";
         con.query(sql, function (err, result1) {
@@ -105,7 +105,7 @@ function newConnection(socket){
     
     //adding members
     socket.on('addmember',function(membername_,chatid_){
-        var membername = escapeHtml(membername_);
+        var membername = membername_;
         var chatid = chatid_;
         var sql = "SELECT * FROM ChromeChat.USER WHERE navn = '"+membername+"'";
         con.query(sql, function (err, result1) {
@@ -155,7 +155,7 @@ function newConnection(socket){
     socket.on('sendMessage',function(chatid_,userid_,message_){
         var chatid = chatid_;
         var userid = userid_;
-        message = escapeHtml(message_);
+        var message = message_;
         console.log(chatid+" "+userid+" "+message)
         var sql = "INSERT INTO ChromeChat.MESSAGE(user_id,chat_id,message) VALUES ('"+userid+"','"+chatid+"','"+message+"')";
         con.query(sql, function (err, result) {
@@ -193,19 +193,19 @@ function newConnection(socket){
         });
     });
     console.log(socket.id);
-}
+    
+    function escapeHtml(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
 
-function escapeHtml(text) {
-    console.log("escapeHtml"+text);
-  var map = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;'
-  };
-    newtext = text.replace(/[&<>"']/g, function(m) { return map[m]; });
-  return newtext;
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+    
 }
 
 
