@@ -126,7 +126,7 @@ function newConnection(socket){
     //chatrequest
     socket.on('chatQuery',function(userid_){
         userid = escapeHtml(userid_);
-        console.log(userID+"recieved");
+        console.log(userid+"recieved");
         var sql = "SELECT chat_id FROM ChromeChat.MEMBER WHERE user_id='"+userid+"'";
         con.query(sql, function (err, result) {
             if (err) throw(err);
@@ -202,7 +202,7 @@ function escapeHtml(text) {
     '"': '&quot;',
     "'": '&#039;'
   };
-
+    text=""+text;
   return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
