@@ -55,7 +55,9 @@ function newConnection(socket){
     //signup
     socket.on('signup',function(username_,password_){
         var username = username_;
+        username = escapeHtml(username_);
         var password = password_;
+        password = escapeHtml(password_);
         var sql = "SELECT * FROM ChromeChat.USER WHERE navn = '"+ username +"' AND password = '"+password+"'";
         con.query(sql, function (err, result) {
             if (err) throw(err);
