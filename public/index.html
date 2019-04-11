@@ -90,6 +90,8 @@
             $('#main').append($chatnameinput);
             $('#main').append($chatbutton);
             
+            
+            
             $('#chatsubmit').click(function(e){
                 console.log("button pressed");
                 e.preventDefault(); // prevents page reloading
@@ -97,11 +99,41 @@
                 $('#chatname').val('');
                 return false;
             });
+            
+            function addchatbutton(chatnavn1,chatid1){
+                $selectchatbutton = document.createElement("button");
+                $selectchatbutton.id = chatid1;
+                $selectchatbutton.value = chatid1;
+                $selectchatbutton.append(""+chatnavn1+"");
+                $selectchatbutton.style = "width: 100px; height: 20px;";
+
+                $('#main').append("<br>");
+                $('#main').append($selectchatbutton);
+
+
+                $('#'+chatid1).click(function(e){
+                    var thisid = $('#'+chatid1).val();
+                    console.log("you pressed" + thisid);
+                    clear();
+                    chatsite(thisid);
+                });
+            }
+            
+            socket.on("ch",function(ChatNavn,ChatId){
+                console.log("chat recieved");
+                console.log(ChatNavn);
+                console.log(ChatId);
+                addchatbutton(ChatNavn,ChatId);
+            });
+            
+            socket.emit('chatQuery', userID);
+            
         }
         
         //her foregår chatten
         function chatsite(chatid){
             var Cchatid = chatid;
+            console.log(Cchatid);
             
             $membernameinput = document.createElement("input");
             $membernameinput.style = "width: 100px; height: 20px;";
@@ -162,43 +194,21 @@
         }
         
         
-        function addchatbutton(chatnavn,chatid){
-            $selectchatbutton = document.createElement("button");
-            $selectchatbutton.id = chatid;
-            $selectchatbutton.value = chatid;
-            $selectchatbutton.append(""+chatnavn+"");
-            $selectchatbutton.style = "width: 100px; height: 20px;";
-            
-            $('#main').append("<br>");
-            $('#main').append($selectchatbutton);
-            
-            
-            $('#'+chatid).click(function(e){
-                console.log("you pressed "+$('#'+chatid).val());
-                var thisis10 = $('#'+chatid).val();
-                console.log(thisis10);
-                clear();
-                chatsite(thisis10);
-                
-            });
-        }
+        
         
         socket.on('login', function(msg,ID,name){
             if(msg){
                 userID = ID;
                 clear();
                 usersite(name);
-                socket.emit('chatQuery', userID);
             }
         });
+        
         socket.on('errormsg', function(msg){
             alert(msg);
         });
-        socket.on("ch",function(ChatNavn,ChatId){
-            console.log(ChatNavn);
-            console.log(ChatId);
-            addchatbutton(ChatNavn,ChatId);
-        });
+        
+        
     </script>
   </body>
 </html>
